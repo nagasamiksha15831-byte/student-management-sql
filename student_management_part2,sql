@@ -1,0 +1,87 @@
+-- =========================================
+-- STUDENT MANAGEMENT SYSTEM
+-- =========================================
+
+-- Create Database
+CREATE DATABASE student_management;
+
+USE student_management;
+
+-- =========================================
+-- Department Table
+-- =========================================
+CREATE TABLE department (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(30) NOT NULL
+);
+
+-- =========================================
+-- Student Table
+-- =========================================
+CREATE TABLE student (
+    stu_id INT PRIMARY KEY,
+    sname VARCHAR(50) NOT NULL,
+    age INT,
+    dept_id INT,
+    marks INT,
+    FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+);
+
+-- =========================================
+-- Insert Department Data
+-- =========================================
+INSERT INTO department VALUES
+(1, 'CSE'),
+(2, 'IT'),
+(3, 'ECE'),
+(4, 'MECH');
+
+-- =========================================
+-- Insert Student Data
+-- =========================================
+INSERT INTO student VALUES
+(101, 'Arun', 20, 1, 85),
+(102, 'Priya', 21, 2, 78),
+(103, 'Kiran', 22, 3, 90),
+(104, 'Divya', 20, 1, 88),
+(105, 'Rahul', 23, 4, 70),
+(106, 'Meena', 21, 2, 95);
+
+-- =========================================
+-- QUERIES
+-- =========================================
+
+-- 1. View all students
+SELECT * FROM student;
+
+-- 2. View all departments
+SELECT * FROM department;
+
+-- 3. Join student and department
+SELECT s.stu_id, s.sname, d.dept_name, s.marks
+FROM student s
+JOIN department d ON s.dept_id = d.dept_id;
+
+-- 4. Students with marks > 80
+SELECT * FROM student
+WHERE marks > 80;
+
+-- 5. Highest marks student
+SELECT * FROM student
+WHERE marks = (SELECT MAX(marks) FROM student);
+
+-- 6. Students in CSE department
+SELECT * FROM student
+WHERE dept_id = (
+    SELECT dept_id FROM department WHERE dept_name = 'CSE'
+);
+
+-- 7. Department-wise student count
+SELECT dept_id, COUNT(*) AS total_students
+FROM student
+GROUP BY dept_id;
+
+-- 8. Average marks per department
+SELECT dept_id, AVG(marks) AS avg_marks
+FROM student
+GROUP BY dept_id;
